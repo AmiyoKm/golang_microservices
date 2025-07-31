@@ -6,9 +6,10 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
-	"ride-sharing/shared/env"
 	"syscall"
 	"time"
+
+	"ride-sharing/shared/env"
 )
 
 var (
@@ -16,11 +17,13 @@ var (
 )
 
 func main() {
+	log.Println("Starting API Gateway")
+
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("POST /trip/preview", enableCORS(handleTripPreview))
-	mux.HandleFunc("/ws/drivers",enableCORS(handleDriversWebSocket))
-	mux.HandleFunc("/ws/riders",enableCORS(handleRidersWebsocket))
+	mux.HandleFunc("/ws/drivers", handleDriversWebSocket)
+	mux.HandleFunc("/ws/riders", handleRidersWebSocket)
 
 	server := &http.Server{
 		Addr:    httpAddr,
@@ -28,8 +31,8 @@ func main() {
 	}
 
 	serverErrors := make(chan error, 1)
-	go func() {
 
+	go func() {
 		log.Printf("Server listening on %s", httpAddr)
 		serverErrors <- server.ListenAndServe()
 	}()
@@ -38,17 +41,17 @@ func main() {
 	signal.Notify(shutdown, os.Interrupt, syscall.SIGTERM)
 
 	select {
-
 	case err := <-serverErrors:
-		log.Printf("error stating the server %v", err)
+		log.Printf("Error starting the server: %v", err)
+
 	case sig := <-shutdown:
-		log.Printf("server is shutting down due to %s signal", sig.String())
+		log.Printf("Server is shutting down due to %v signal", sig)
 
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 		defer cancel()
 
 		if err := server.Shutdown(ctx); err != nil {
-			log.Printf("could not shutdown gracefully :%v", err)
+			log.Printf("Could not stop the server gracefully: %v", err)
 			server.Close()
 		}
 	}
