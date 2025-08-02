@@ -72,19 +72,21 @@ export default function RiderMap({ onRouteSelected }: RiderMapProps) {
             })
             console.log(data)
 
-            const parsedRoute = data.route.geometry[0].coordinates
-                .map((coord) => [coord.longitude, coord.latitude] as [number, number])
+            const parsedRoute = data.route.geometry[0]?.coordinates
+                ?.map((coord) => [coord.longitude, coord.latitude] as [number, number])
 
-            setTrip({
-                tripID: "",
-                route: parsedRoute,
-                rideFares: data.rideFares,
-                distance: data.route.distance,
-                duration: data.route.duration,
-            })
+            if (parsedRoute) {
+                setTrip({
+                    tripID: "",
+                    route: parsedRoute,
+                    rideFares: data.rideFares,
+                    distance: data.route.distance,
+                    duration: data.route.duration,
+                })
 
-            // Call onRouteSelected with the route distance
-            onRouteSelected?.(data.route.distance)
+                // Call onRouteSelected with the route distance
+                onRouteSelected?.(data.route.distance)
+            }
         }, 500);
     }
 
