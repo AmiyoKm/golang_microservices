@@ -255,7 +255,7 @@ func (x *Route) GetDuration() float64 {
 
 type Geometry struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Coordiantes   []*Coordinate          `protobuf:"bytes,1,rep,name=coordiantes,proto3" json:"coordiantes,omitempty"`
+	Coordinates   []*Coordinate          `protobuf:"bytes,1,rep,name=coordinates,proto3" json:"coordinates,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -290,9 +290,9 @@ func (*Geometry) Descriptor() ([]byte, []int) {
 	return file_trip_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *Geometry) GetCoordiantes() []*Coordinate {
+func (x *Geometry) GetCoordinates() []*Coordinate {
 	if x != nil {
-		return x.Coordiantes
+		return x.Coordinates
 	}
 	return nil
 }
@@ -644,7 +644,7 @@ const file_trip_proto_rawDesc = "" +
 	"\bdistance\x18\x02 \x01(\x01R\bdistance\x12\x1a\n" +
 	"\bduration\x18\x03 \x01(\x01R\bduration\">\n" +
 	"\bGeometry\x122\n" +
-	"\vcoordiantes\x18\x01 \x03(\v2\x10.trip.CoordinateR\vcoordiantes\"\x82\x01\n" +
+	"\vcoordinates\x18\x01 \x03(\v2\x10.trip.CoordinateR\vcoordinates\"\x82\x01\n" +
 	"\bRideFare\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x16\n" +
 	"\x06userID\x18\x02 \x01(\tR\x06userID\x12 \n" +
@@ -708,7 +708,7 @@ var file_trip_proto_depIdxs = []int32{
 	3,  // 2: trip.PreviewTripResponse.route:type_name -> trip.Route
 	5,  // 3: trip.PreviewTripResponse.rideFares:type_name -> trip.RideFare
 	4,  // 4: trip.Route.geometry:type_name -> trip.Geometry
-	2,  // 5: trip.Geometry.coordiantes:type_name -> trip.Coordinate
+	2,  // 5: trip.Geometry.coordinates:type_name -> trip.Coordinate
 	8,  // 6: trip.CreateTripResponse.trip:type_name -> trip.Trip
 	5,  // 7: trip.Trip.selectedFare:type_name -> trip.RideFare
 	3,  // 8: trip.Trip.route:type_name -> trip.Route
