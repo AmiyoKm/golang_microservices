@@ -101,8 +101,8 @@ It's advisable to first run the steps manually and then build a proper CI/CD flo
 
 ## 0. Environments
 ```bash
-REGION: europe-west1 # change according to your location
-PROJECT_ID: <your-gcp-project-id>
+REGION: asia-south1 # change according to your location
+PROJECT_ID: able-folio-466619-j4
 ```
 
 ## 1. Add secrets.yaml file to the production folder
@@ -112,26 +112,26 @@ Production folder needs to contain a secrets.yaml for the production environment
 ## 2. Build Docker Images
 Build all docker images and tag them accordingly to push to Artifact Registry.
 ```bash
-# Build the Api gateway 
+# Build the Api gateway
 docker build -t {REGION}-docker.pkg.dev/{PROJECT_ID}/ride-sharing/api-gateway:latest --platform linux/amd64 -f infra/production/docker/api-gateway.Dockerfile .
 
-# Build the Driver service 
+# Build the Driver service
 docker build -t {REGION}-docker.pkg.dev/{PROJECT_ID}/ride-sharing/driver-service:latest --platform linux/amd64 -f infra/production/docker/driver-service.Dockerfile .
 
-# Build the Trip service 
+# Build the Trip service
 docker build -t {REGION}-docker.pkg.dev/{PROJECT_ID}/ride-sharing/trip-service:latest --platform linux/amd64 -f infra/production/docker/trip-service.Dockerfile .
 
-# Build the Payment service 
+# Build the Payment service
 docker build -t {REGION}-docker.pkg.dev/{PROJECT_ID}/ride-sharing/payment-service:latest --platform linux/amd64 -f infra/production/docker/payment-service.Dockerfile .
 ```
 
 ## 3. Create a Artifact Registry repository
-Go to Google Cloud > Artifact Registry and manually create a docker repository to host your project images. 
+Go to Google Cloud > Artifact Registry and manually create a docker repository to host your project images.
 
 
 ## 4. Push the Docker images to artifact registry
 
-Docker push the images. 
+Docker push the images.
 If you get errors pushing:
 1. Make sure to `gcloud login`, select the right project or even `gcloud init`.
 2. Configure artifact on your docker config `gcloud auth configure-docker {REGION}-docker.pkg.dev` [Docs](https://cloud.google.com/artifact-registry/docs/docker/pushing-and-pulling#cred-helper)
@@ -218,7 +218,7 @@ gcloud compute addresses list
 kubectl apply -f infra/production/k8s/api-gateway-ingress.yaml
 kubectl apply -f infra/production/k8s/api-gateway-deployment.yaml
 ```
-4. Get the IP address: 
+4. Get the IP address:
 ```bash
 kubectl get ingress api-gateway-ingress
 ```
