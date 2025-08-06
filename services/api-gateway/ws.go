@@ -36,6 +36,7 @@ func handleRidersWebSocket(w http.ResponseWriter, r *http.Request, rb *messaging
 	// Initialize queue consumers
 	queues := []string{
 		messaging.NotifyDriverNoDriversFoundQueue,
+		messaging.NotifyDriverAssignQueue,
 	}
 
 	for _, q := range queues {
@@ -138,22 +139,25 @@ func handleDriversWebSocket(w http.ResponseWriter, r *http.Request, rb *messagin
 			log.Printf("Error reading message: %v", err)
 			break
 		}
-		type DriverMessage struct {
+
+		type driverMessage struct {
 			Type string          `json:"type"`
 			Data json.RawMessage `json:"data"`
 		}
 
-		var driverMsg DriverMessage
+		var driverMsg driverMessage
 		if err := json.Unmarshal(message, &driverMsg); err != nil {
 			log.Printf("Error unmarshaling driver message: %v", err)
 			continue
 		}
 
+		// Handle the different message type
 		switch driverMsg.Type {
 		case contracts.DriverCmdLocation:
-			// handler driver location update in the future
+			// Handle driver location update in the future
 			continue
 		case contracts.DriverCmdTripAccept, contracts.DriverCmdTripDecline:
+			// Forward the message to RabbitMQ
 			if err := rb.PublishMessage(ctx, driverMsg.Type, contracts.AmqpMessage{
 				OwnerID: userID,
 				Data:    driverMsg.Data,

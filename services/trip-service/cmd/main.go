@@ -20,6 +20,8 @@ import (
 var GrpcAddr = ":9093"
 
 func main() {
+	rabbitMqURI := env.GetString("RABBITMQ_URI", "amqp://guest:guest@rabbitmq:5672/")
+
 	inmemRepo := repository.NewInmemRepository()
 	svc := service.NewService(inmemRepo)
 
@@ -38,18 +40,20 @@ func main() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 
-	// rabbitMq connection
-	rabbitMqURI := env.GetString("RABBITMQ_URI", "amqp://guest:guest@localhost:5672")
-
+	// RabbitMQ connection
 	rabbitmq, err := messaging.NewRabbitMQ(rabbitMqURI)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer rabbitmq.Close()
-	log.Println("starting RabbitMQ connection")
+
+	log.Println("Starting RabbitMQ connection")
 
 	publisher := events.NewTripEventPublisher(rabbitmq)
 
+	// Start driver consumer
+	driverConsumer := events.NewDriverConsumer(rabbitmq, svc)
+	go driverConsumer.Listen()
 
 	// Starting the gRPC server
 	grpcServer := grpcserver.NewServer()
