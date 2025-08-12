@@ -32,8 +32,8 @@ export function useRiderStreamConnection(location: Coordinate, userID: string) {
       const message = JSON.parse(event.data) as ServerWsMessage;
 
       if (!message || !isValidWsMessage(message)) {
-        setError(`Unknown message type "${message}", allowed types are: ${Object.values(TripEvents).join(', ')}`);
-        return;
+        // setError(`Unknown message type "${message}", allowed types are: ${Object.values(TripEvents).join(', ')}`);
+        // return;
       }
 
       switch (message.type) {
