@@ -45,11 +45,6 @@ spec:
                 secretKeyRef:
                   name: rabbitmq-credentials
                   key: username
-            - name: JAEGER_ENDPOINT
-              valueFrom:
-                configMapKeyRef:
-                  key: JAEGER_ENDPOINT
-                  name: app-config
             - name: RABBITMQ_DEFAULT_PASS
               valueFrom:
                 secretKeyRef:

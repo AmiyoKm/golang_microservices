@@ -75,7 +75,7 @@ func (s *Service) RegisterDriver(driverId string, packageSlug string) (*pb.Drive
 func (s *Service) UnregisterDriver(driverId string) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
-
+	
 	for i, driver := range s.drivers {
 		if driver.Driver.Id == driverId {
 			s.drivers = append(s.drivers[:i], s.drivers[i+1:]...)
