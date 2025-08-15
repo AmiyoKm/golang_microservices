@@ -30,17 +30,11 @@ spec:
                 secretKeyRef:
                   name: rabbitmq-credentials
                   key: uri
-            - name: OSRM_API
+            - name: MONGODB_URI
               valueFrom:
                 secretKeyRef:
-                  name: external-apis
-                  key: osrm
-
-            - name: JAEGER_ENDPOINT
-              valueFrom:
-                configMapKeyRef:
-                  key: JAEGER_ENDPOINT
-                  name: app-config
+                  name: mongodb
+                  key: uri
 ---
 apiVersion: v1
 kind: Service

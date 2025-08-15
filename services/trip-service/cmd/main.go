@@ -10,6 +10,7 @@ import (
 	"ride-sharing/services/trip-service/internal/infrastructure/grpc"
 	"ride-sharing/services/trip-service/internal/infrastructure/repository"
 	"ride-sharing/services/trip-service/internal/service"
+	"ride-sharing/shared/db"
 	"ride-sharing/shared/env"
 	"ride-sharing/shared/messaging"
 	"ride-sharing/shared/tracing"
@@ -37,10 +38,19 @@ func main() {
 	defer cancel()
 	defer sh(ctx)
 
+	// Initialize MongoDB
+	mongoClient, err := db.NewMongoClient(ctx, db.NewMongoDefaultConfig())
+	if err != nil {
+		log.Fatalf("Failed to initialize MongoDB, err: %v", err)
+	}
+	defer mongoClient.Disconnect(ctx)
+
+	mongoDb := db.GetDatabase(mongoClient, db.NewMongoDefaultConfig())
+
 	rabbitMqURI := env.GetString("RABBITMQ_URI", "amqp://guest:guest@rabbitmq:5672/")
 
-	inmemRepo := repository.NewInmemRepository()
-	svc := service.NewService(inmemRepo)
+	mongoDBRepo := repository.NewMongoRepository(mongoDb)
+	svc := service.NewService(mongoDBRepo)
 
 	go func() {
 		sigCh := make(chan os.Signal, 1)
