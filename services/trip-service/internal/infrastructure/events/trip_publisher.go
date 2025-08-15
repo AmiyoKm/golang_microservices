@@ -22,10 +22,12 @@ func (p *TripEventPublisher) PublishTripCreated(ctx context.Context, trip *domai
 	payload := messaging.TripEventData{
 		Trip: trip.ToProto(),
 	}
+
 	tripEventJSON, err := json.Marshal(payload)
 	if err != nil {
 		return err
 	}
+
 	return p.rabbitmq.PublishMessage(ctx, contracts.TripEventCreated, contracts.AmqpMessage{
 		OwnerID: trip.UserID,
 		Data:    tripEventJSON,

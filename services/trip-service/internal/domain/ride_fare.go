@@ -27,7 +27,6 @@ func (r *RideFareModel) ToProto() *pb.RideFare {
 
 func ToRideFaresProto(fares []*RideFareModel) []*pb.RideFare {
 	var protoFares []*pb.RideFare
-
 	for _, f := range fares {
 		protoFares = append(protoFares, f.ToProto())
 	}
